@@ -1,29 +1,11 @@
 'use strict';
 const { Service } = require('./service');
 
-const CcqService = class CcqService extends Service {
+const CcqService = class CcqService extends Service { 
 
-    async createPublisher(data) {
+    async importData(data) {
         try {
-            await this._client.getOrgAdmin();
-            const successResult = await this.invoke('create_publisher', data);
-            if (successResult) {
-                throw new Error(successResult);
-            }
-            else {
-                return await this._client.register(data.username);
-            }
-        } catch (e) {
-            throw (`${e.message}`);
-        }
-    }
-
-    async payIn(data) {
-        try {
-            const successResult = await this.invoke('pay_in', data);
-            if (successResult) {
-                throw (new Error(successResult))
-            }
+            await this.invoke('importCCQ', data);
         } catch (e) {
             throw (`${e.message}`);
         }

@@ -10,7 +10,7 @@ const { writeFileSync, unlinkSync } = require('fs');
 const writeCryptoFile =
   (fileName, data) => writeFileSync(fileName, data);
 // Setup clients per organization
-const realestateClient = new OrganizationClient(
+const bdsClient = new OrganizationClient(
   config.channelName,
   config.orderer0,
   config.bdsOrg.peer,
@@ -24,7 +24,7 @@ const traderClient = new OrganizationClient(
   config.traderOrg.ca,
   config.traderOrg.admin
 );
-const regulatorClient = new OrganizationClient(
+const ccqClient = new OrganizationClient(
   config.channelName,
   config.orderer0,
   config.ccqOrg.peer,
@@ -34,9 +34,9 @@ const regulatorClient = new OrganizationClient(
 
 function getAdminOrgs() {
   return Promise.all([
-    realestateClient.getOrgAdmin(),
+    bdsClient.getOrgAdmin(),
     traderClient.getOrgAdmin(),
-    regulatorClient.getOrgAdmin()
+    ccqClient.getOrgAdmin()
   ]);
 }
 
@@ -44,9 +44,9 @@ function getAdminOrgs() {
   // Login
   try {
     await Promise.all([
-      realestateClient.login(),
+      bdsClient.login(),
       traderClient.login(),
-      regulatorClient.login()
+      ccqClient.login()
     ]);
   } catch (e) {
     console.log('Fatal error logging into blockchain organization clients!');
@@ -58,9 +58,9 @@ function getAdminOrgs() {
   try {
     await getAdminOrgs();
     await Promise.all([
-      realestateClient.initialize(),
+      bdsClient.initialize(),
       traderClient.initialize(),
-      regulatorClient.initialize()
+      ccqClient.initialize()
     ]);
   } catch (e) {
     console.log('Fatal error initializing blockchain organization clients!');
@@ -68,15 +68,15 @@ function getAdminOrgs() {
     process.exit(-1);
   }
 
-  // init Admin@regulator-peer
+  // init Admin@ccq-peer
   try {
     const data = {
-      username: "Admin@regulator-org",
+      username: "Admin@ccq-org",
       firstName: "Admin",
-      lastName: "regulator-org",
+      lastName: "ccq-org",
       identityCard: "01234567891"
     };
-    const successResult = await regulatorClient.invoke(config.chaincodeId, 'create_publisher', data);
+    const successResult = await ccqClient.invoke(config.chaincodeId, 'create_publisher', data);
     if (successResult) {
       throw new Error(successResult);
     }
@@ -87,7 +87,7 @@ function getAdminOrgs() {
 
 // Export organization clients
 module.exports = {
-  realestateClient,
+  bdsClient,
   traderClient,
-  regulatorClient
+  ccqClient
 };

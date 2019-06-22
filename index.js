@@ -1,7 +1,6 @@
 var express = require('express');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
-process.env.SECRET = "my secret";
 var bodyParser = require('body-parser');
 var port = 8000;
 var app = express();
@@ -21,7 +20,6 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-app.use('/uploads', express.static('uploads'));
 app.use('/api/bds', bds);
 app.use('/api/ccq', ccq);
 app.use('/api/trader', trader);

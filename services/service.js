@@ -23,6 +23,14 @@ const Service = class Service {
         }
     }
 
+    async getData(query) {
+        try {
+            return await this.query('queryRevexs', query);
+        } catch (e) {
+            throw (`${e.message}`);
+        }
+    }
+
     invoke(fcn, ...args) {
         return this._client.invoke(
             config.chaincodeId, fcn, ...args);

@@ -1,10 +1,6 @@
 'use strict';
 const express = require('express')
 const router = express.Router()
-var fs = require('fs')
-var jwt = require('jsonwebtoken');
-process.env.SECRET = "my secret"
-var path = require('path');
 const { ccqService, traderService, bdsService } = require('../services/total')
 
 router.post('/register', async (req, res, next) => {
@@ -31,5 +27,83 @@ router.post('/register', async (req, res, next) => {
         res.status(500).json({ error: error });
     }
 })
+
+router.get('/get-bds', async (req, res, next) => {
+    var query = {
+        "selector": {
+            "docType": "revexBDS",
+        },
+        "use_index": [
+            "_design/revexDoc",
+            "revex"
+        ]
+    };
+
+    if (req.query.symbol)
+        query.selector.symbol = req.query.symbol
+    if (req.query.type)
+        query.selector.tranType = parseInt(req.query.type)
+    if (req.query.org)
+        query.selector.org = req.query.org
+    if (req.query.startTime) {
+        let timestamp = { "$gt": parseInt(req.query.startTime) }
+        query.selector.timestamp = timestamp
+    }
+    if (req.query.endTime) {
+        if (query.selector.timestamp) {
+            query.selector.timestamp.$lt = parseInt(req.query.endTime)
+        }
+        else {
+            let timestamp = { "$lt": parseInt(req.query.endTime) }
+            query.selector.timestamp = timestamp
+        }
+    }
+
+    try {
+        let result = await traderService.getData(query);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+});
+
+router.get('/get-ccq', async (req, res, next) => {
+    var query = {
+        "selector": {
+            "docType": "revexCCQ",
+        },
+        "use_index": [
+            "_design/revexDoc",
+            "revex"
+        ]
+    };
+
+    if (req.query.symbol)
+        query.selector.symbol = req.query.symbol
+    if (req.query.type)
+        query.selector.tranType = parseInt(req.query.type)
+    if (req.query.org)
+        query.selector.org = req.query.org
+    if (req.query.startTime) {
+        let timestamp = { "$gt": parseInt(req.query.startTime) }
+        query.selector.timestamp = timestamp
+    }
+    if (req.query.endTime) {
+        if (query.selector.timestamp) {
+            query.selector.timestamp.$lt = parseInt(req.query.endTime)
+        }
+        else {
+            let timestamp = { "$lt": parseInt(req.query.endTime) }
+            query.selector.timestamp = timestamp
+        }
+    }
+
+    try {
+        let result = await traderService.getData(query);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+});
 
 module.exports = router

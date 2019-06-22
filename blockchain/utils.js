@@ -43,12 +43,12 @@ const OrganizationClient = class extends EventEmitter {
       'ssl-target-name-override': this._peerConfig.hostname
     });
 
-    const realestatePeer = this._client.newPeer(config.bdsOrg.peer.url, {
+    const bdsPeer = this._client.newPeer(config.bdsOrg.peer.url, {
       pem: config.bdsOrg.peer.pem,
       'ssl-target-name-override': config.bdsOrg.peer.hostname
     });
 
-    const regulatorPeer = this._client.newPeer(config.ccqOrg.peer.url, {
+    const ccqPeer = this._client.newPeer(config.ccqOrg.peer.url, {
       pem: config.ccqOrg.peer.pem,
       'ssl-target-name-override': config.ccqOrg.peer.hostname
     });
@@ -58,8 +58,8 @@ const OrganizationClient = class extends EventEmitter {
       'ssl-target-name-override': config.traderOrg.peer.hostname
     });
 
-    this._channel.addPeer(realestatePeer);
-    this._channel.addPeer(regulatorPeer);
+    this._channel.addPeer(bdsPeer);
+    this._channel.addPeer(ccqPeer);
     this._channel.addPeer(traderPeer);
     const defaultEventHub = this._channel.newChannelEventHub(defaultPeer);
     this._eventHubs.push(defaultEventHub);
@@ -353,8 +353,7 @@ const OrganizationClient = class extends EventEmitter {
       txId: this._client.newTransactionID(),
       targets: [new Peer(this._peerConfig.url, { pem: this._peerConfig.pem, 'ssl-target-name-override': this._peerConfig.hostname })]
     };
-    let result = await this._channel.queryByChaincode(request);
-    console.log(result);
+    let result = await this._channel.queryByChaincode(request);   
     return unmarshalResult(result);
   }
 
@@ -447,7 +446,6 @@ async function getSubmitter(
 module.exports.wrapError = function wrapError(message, innerError) {
   let error = new Error(message);
   error.inner = innerError;
-  console.log(error.message);
   throw error;
 };
 
@@ -460,15 +458,13 @@ function marshalArgs(args) {
     return [args];
   }
 
-  let snakeArgs = camelToSnakeCase(args);
-
   if (Array.isArray(args)) {
-    return snakeArgs.map(
+    return args.map(
       arg => typeof arg === 'object' ? JSON.stringify(arg) : arg.toString());
   }
 
   if (typeof args === 'object') {
-    return [JSON.stringify(snakeArgs)];
+    return [JSON.stringify(args)];
   }
 }
 
@@ -485,7 +481,7 @@ function unmarshalResult(result) {
     return null;
   }
   let obj = JSON.parse(json);
-  return snakeToCamelCase(obj);
+  return obj;
 }
 
 function unmarshalBlock(block) {
