@@ -1,0 +1,28 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha --timeout 20000 ./test/realestate.test "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.4",
+    "fabric-ca-client": "^1.4.0",
+    "fabric-client": "^1.4.0",
+    "json-style-converter": "^1.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.1.4",
+    "mongoose": "^5.5.5",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "socket.io": "^2.2.0"
+  }
+}
