@@ -1,14 +1,7 @@
 'use strict';
 const config = require('./config');
 const { OrganizationClient } = require('./utils');
-const http = require('http');
-const url = require('url');
 
-let status = 'down';
-let statusChangedCallbacks = [];
-const { writeFileSync, unlinkSync } = require('fs');
-const writeCryptoFile =
-  (fileName, data) => writeFileSync(fileName, data);
 // Setup clients per organization
 const bdsClient = new OrganizationClient(
   config.channelName,
@@ -54,35 +47,6 @@ function getAdminOrgs() {
     process.exit(-1);
   }
 
-  // Initialize network
-  try {
-    await getAdminOrgs();
-    await Promise.all([
-      bdsClient.initialize(),
-      traderClient.initialize(),
-      ccqClient.initialize()
-    ]);
-  } catch (e) {
-    console.log('Fatal error initializing blockchain organization clients!');
-    console.log(e);
-    process.exit(-1);
-  }
-
-  // init Admin@ccq-peer
-  try {
-    const data = {
-      username: "Admin@ccq-org",
-      firstName: "Admin",
-      lastName: "ccq-org",
-      identityCard: "01234567891"
-    };
-    const successResult = await ccqClient.invoke(config.chaincodeId, 'create_publisher', data);
-    if (successResult) {
-      throw new Error(successResult);
-    }
-  } catch (e) {
-    // console.log(`${e.message}`);
-  }
 })();
 
 // Export organization clients
