@@ -71,20 +71,35 @@ const config = {
 
 var local = true;
 
-if (!local) {
-  config.orderer0.url = 'grpcs://10.148.0.8:7050';
+if (local) {
+  // config.orderer0.url = 'grpcs://10.148.0.8:10050';
 
-  config.bdsOrg.peer.url = 'grpcs://10.148.0.6:7051';
-  config.traderOrg.peer.url = 'grpcs://10.148.0.5:9051';
-  config.ccqOrg.peer.url = 'grpcs://10.148.0.7:10051';
+  // config.bdsOrg.peer.url = 'grpcs://10.148.0.6:30051';
+  // config.traderOrg.peer.url = 'grpcs://10.148.0.5:20051';
+  // config.ccqOrg.peer.url = 'grpcs://10.148.0.8:40051';
 
-  config.bdsOrg.peer.eventHubUrl = 'grpcs://10.148.0.6:7053';
-  config.traderOrg.peer.eventHubUrl = 'grpcs://10.148.0.5:9053';
-  config.ccqOrg.peer.eventHubUrl = 'grpcs://10.148.0.7:10053';
+  // config.bdsOrg.peer.eventHubUrl = 'grpcs://10.148.0.6:30053';
+  // config.traderOrg.peer.eventHubUrl = 'grpcs://10.148.0.5:20053';
+  // config.ccqOrg.peer.eventHubUrl = 'grpcs://10.148.0.8:40053';
 
-  config.bdsOrg.ca.url = 'https://10.148.0.6:7054';
-  config.traderOrg.ca.url = 'https://10.148.0.5:9054';
-  config.ccqOrg.ca.url = 'https://10.148.0.7:10054';
+  // config.bdsOrg.ca.url = 'https://10.148.0.6:30054';
+  // config.traderOrg.ca.url = 'https://10.148.0.5:20054';
+  // config.ccqOrg.ca.url = 'https://10.148.0.8:40054';
+
+  config.orderer0.url = 'grpcs://34.87.116.245:10050';
+
+  config.bdsOrg.peer.url = 'grpcs://34.87.84.124:30051';
+  config.traderOrg.peer.url = 'grpcs://35.247.134.54:20051';
+  config.ccqOrg.peer.url = 'grpcs://34.87.116.245:40051';
+
+  config.bdsOrg.peer.eventHubUrl = 'grpcs://34.87.84.124:30053';
+  config.traderOrg.peer.eventHubUrl = 'grpcs://35.247.134.54:20053';
+  config.ccqOrg.peer.eventHubUrl = 'grpcs://34.87.116.245:40053';
+
+  config.bdsOrg.ca.url = 'https://34.87.84.124:30054';
+  config.traderOrg.ca.url = 'https://35.247.134.54:20054';
+  config.ccqOrg.ca.url = 'https://34.87.116.245:40054';
+
 } else {
 
   config.orderer0.url = 'grpcs://localhost:7050';
