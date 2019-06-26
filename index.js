@@ -1,5 +1,4 @@
 var express = require('express');
-const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
 var bodyParser = require('body-parser');
 var port = 8000;
@@ -14,7 +13,6 @@ if (process.env.NODE_ENV === "test") {
     app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
 }
 
-app.use(fileUpload());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
